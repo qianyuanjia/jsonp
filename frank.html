@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+	<meta charset="UTF-8">
+	<title>frank前端</title>
+</head>
+<body>
+	<div id="num">&&&num&&&</div>
+	<button id="btn">点我</button>
+	<script>
+		var oBtn=document.getElementById('btn');
+		var oNum=document.getElementById('num');
+		oBtn.onclick=function(){
+			var oScript=document.createElement('script');
+			var fName='frank'+parseInt(Math.random()*10000000);
+			window[fName]=function(res){
+				if(res==='success'){
+					oNum.innerText--;
+				}else{
+					alert('操作失败！');
+				}
+				delete window[fName];
+			}
+			oScript.src="//jack.com:8002/pay?callback="+fName;
+			document.body.appendChild(oScript);
+			oScript.onload=function(){
+				oScript.remove();
+			}
+			oScript.onerror=function(){
+				oScript.remove();
+				alert('请求失败');
+			}
+			
+		}
+	</script>
+</body>
+</html>
