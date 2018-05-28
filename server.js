@@ -6,23 +6,17 @@ var server=http.createServer(function(request,response){
 	var path=request.url;
 	var oUrl=url.parse(path,true);
 	var pathStr=oUrl.pathname;
-	var queryStr='';
-	var paramArr=[];
+	var oQuery={};
 	if(path.indexOf('?')>=0){
-		queryStr=path.substring(path.indexOf('?')+1);
-		paramArr=queryStr.split('=');
+		oQuery=oUrl.query;
 	}
 	/********************************************/
-	if(pathStr==='/pay' && queryStr){
+	if(pathStr==='/pay'){
 		response.setHeader('Content-Type','application/javascript');
-		if(paramArr[0]==='callback'){
-			var aNum=fs.readFileSync('./db','utf-8');
-			aNum=aNum-1+'';
-			response.write(`${paramArr[1]}.call(undefined,'success')`);
-			fs.writeFileSync('./db',aNum,'utf-8');
-		}else{
-			response.statusCode=400;
-		}
+		var aNum=fs.readFileSync('./db','utf-8');
+		aNum=aNum-1+'';
+		response.write(`${oQuery.callback}.call(undefined,'success')`);
+		fs.writeFileSync('./db',aNum,'utf-8');
 		response.end();
 	}else if(pathStr==='/frank.html'){
 		var str=fs.readFileSync('./frank.html','utf-8');
